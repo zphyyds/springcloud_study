@@ -1,0 +1,41 @@
+server:
+  port: 10010
+spring:
+  application:
+    # 服务名册
+    name: gatewway
+  cloud:
+    nacos:
+      server-addr: localhost:8848 #nacos地址
+    gateway:
+      globalcors: #全局的跨域处理
+        add-to-simple-url-handler-mapping: true #解决options请求被拦截的问题
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: #允许哪些可以跨域的网址
+              - "http://localhost:8090"
+              - "htt[://www.baidu.com"
+            allowedMethods:
+              - "GET"
+              - "POST"
+              - "DELETE"
+              - "PUT"
+              - "OPTIONS"
+            allowedHeaders: "*" #允许在请求中携带的头信息
+            allowCredentials: true  #是否允许携带cookie
+            maxAge: 360000 #这次跨域检测的有效期
+      routes: #网关路由配置
+        - id: user-service #路由ID，自定义，只要唯一即可
+          uri: lb://userservice #路由的目标地址，lb就是负载均衡，通过服务名称到nacos中找到服务列表，然后负载均衡来确定服务名称
+#          断言
+          predicates: #判断请求路径是否满足下面的规则
+            - Path=/user/**
+        - id: order-service
+          uri: lb://orderservice
+          predicates:
+            #Path是断言工厂
+            - Path=/order/**
+#          filters:
+#            - AddRequestHeader=zph,zphyyds
+      default-filters:
+        - AddRequestHeader=Truth,Itcast is very handsome!
