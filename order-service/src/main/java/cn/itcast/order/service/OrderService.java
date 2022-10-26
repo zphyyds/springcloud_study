@@ -21,8 +21,8 @@ public class OrderService {
     public Order queryOrderById(Long orderId) {
         // 1.查询订单
         Order order = orderMapper.findById(orderId);
-        //2.得到userService的访问路径
-        String url = "http://localhost:8081/user/" + order.getUserId();
+        //2.得到userService的访问路径,直接调用服务名称
+        String url = "http://user-service/user/" + order.getUserId();
         //向UserService发送Http请求得到User数据，传入User的class对象将UserJson数据反序列化成User对象
         User user = restTemplate.getForObject(url, User.class);
         //封装查询到的user对象
