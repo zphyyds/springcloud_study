@@ -6,8 +6,18 @@ spring:
     username: root
     password: abc123456
     driver-class-name: com.mysql.jdbc.Driver
+#    服务的名称
   application:
-    name: order-service
+    name: orderservice
+  cloud:
+    nacos:
+      server-addr: localhost:8848  #nacos服务地址
+      discovery:
+        cluster-name: HZ  #集群
+#        是否是临时实例 false非临时实例  true:临时实例 默认是true
+#        ephemeral: false
+#        设置命名空间
+#        namespace: 774fb6a2-febc-446b-8247-43624830be45
 mybatis:
   type-aliases-package: cn.itcast.user.pojo
   configuration:
@@ -18,9 +28,13 @@ logging:
   pattern:
     dateformat: MM-dd HH:mm:ss:SSS
 
+#user-service服务负载均衡规则
+user-service:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.alibaba.cloud.nacos.ribbon.NacosRule
 
-eureka:
-  client:
-    service-url:
-      #      eureka-server本身也是一个服务
-      defaultZone: http://127.0.0.1:10086/eureka
+#Eureka客户端配置
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://127.0.0.1:10086/eureka
